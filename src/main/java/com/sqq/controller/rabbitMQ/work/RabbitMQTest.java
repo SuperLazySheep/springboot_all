@@ -58,8 +58,24 @@ public class RabbitMQTest {
         Connection connection = getChannel();
         Channel channel = connection.createChannel();
 
-        //参数1：队列的内容   参数2：是否持久化   参数3：是否独占队列  参数3：是否自动删除  参数4：其他属性
+        /**
+         * 生成一个队列
+         *
+         *  参数1：队列的内容
+         *  参数2：是否持久化, 默认消息是存储在内存中
+         *  参数3：是否独占队列   是否只供一个消费者消费， true可以进行共享 可以多个消费者消费。
+         *  参数3：是否自动删除   最后一个消费者端开连接，该队列是否自动删除 true是
+         *  参数4：其他属性
+         */
         channel.queueDeclare("queue", true, false, false, null);
+        /**
+         *  发送一个消息
+         *
+         *  1.发送到交换机
+         *  2.路由的key是哪个
+         *  3.其他的参数
+         *  4.发送消息的消息体
+         */
         channel.basicPublish("", "queue",null, "hello RabbitMQ".getBytes());
         close(connection, channel);
     }
@@ -72,18 +88,34 @@ public class RabbitMQTest {
         Channel channel = connection.createChannel();
 
         //创建通道
-        channel.queueDeclare("queue", true, false, false, null);
-        channel.basicConsume("queue", true, new DefaultConsumer(channel){
-
+//        channel.queueDeclare("queue", true, false, false, null);
+        /**
+         *  消费者消费消息
+         *
+         *  1.消费那个队列
+         *  2.消费成功后 是否要自动应答， true是  false否
+         *  3.
+         *
+         */
+        /*channel.basicConsume("queue", true, new DefaultConsumer(channel){
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                 System.out.println("消费者：" + new String(body));
             }
+        });*/
+        //推送的消息如何进行消费的 接口回调
+        DeliverCallback deliverCallback = ((consumerTag, delivery) ->{
+            String message = new String(delivery.getBody());
+            System.out.println(message);
         });
+        //取消消费的一个回调接口 如在消费的时候队列被删除掉了
+        CancelCallback cancelCallback  = (consumerTag ->{
+            System.out.println("消息消费被中断....");
+        });
+        channel.basicConsume("queue", true, deliverCallback, cancelCallback);
     }
 
-//////////////////////////////////TODO 2
-
+//TODO 2
     /**
      *第二种模式
      * Work queues，也被称为（Task queues），任务模型。
@@ -151,8 +183,7 @@ public class RabbitMQTest {
 
     public static void main(String[] args) throws IOException, TimeoutException {
         RabbitMQTest rabbitMQTest = new RabbitMQTest();
-        rabbitMQTest.workProducer();
-        rabbitMQTest.workConsumer1();
-
+        rabbitMQTest.producer();
+        rabbitMQTest.consumer();
     }
 }
