@@ -1,4 +1,4 @@
-package com.sqq.controller.rabbitMQ.work;
+package com.sqq.demo.rabbitMQ.work;
 
 import com.rabbitmq.client.*;
 

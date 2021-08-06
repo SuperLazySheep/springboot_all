@@ -1,4 +1,4 @@
-package com.sqq.controller.rabbitMQ.work;
+package com.sqq.demo.rabbitMQ.work;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;

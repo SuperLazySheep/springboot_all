@@ -3,3 +3,11 @@ spring:
     url: jdbc:mysql://localhost:3306/springboot_all?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=CONVERT_TO_NULL&useSSL=false
     username: root
     password: root
+  rabbitmq:
+    host: 47.98.134.75
+    port: 5672
+    username: sqq
+    password: sqq
+    virtual-host: /
+    publisher-confirm-type: correlated     #发布确认
+    publisher-returns: true                #回退消息
