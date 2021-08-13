@@ -38,6 +38,4 @@ public class RedisConfig_Two {
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
-
-    //
 }

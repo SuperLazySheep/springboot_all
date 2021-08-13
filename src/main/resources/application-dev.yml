@@ -9,5 +9,5 @@ spring:
     username: sqq
     password: sqq
     virtual-host: /
-    publisher-confirm-type: correlated     #发布确认
+    publisher-confirm-type:     #发布确认
     publisher-returns: true                #回退消息
